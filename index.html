@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, My Love! ❤️</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: linear-gradient(135deg, #ff4d6d, #ff85a1, #f7aef8);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            color: #333;
+        }
+        .screen {
+            display: none;
+            width: 90%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            margin: 20px auto;
+            animation: fadeIn 1s ease-in-out forwards;
+        }
+        .active {
+            display: block;
+        }
+        
+        /* Typography & Common Styles */
+        h1 { color: #ff0a54; margin-bottom: 15px; font-size: 2rem; }
+        h2 { color: #ff477e; margin-bottom: 15px; }
+        p { font-size: 1.1rem; line-height: 1.6; color: #4a4a4a; margin-bottom: 20px; text-align: justify; }
+        .btn {
+            background: #ff477e;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 15px;
+        }
+        .btn:hover { background: #ff0a54; transform: scale(1.05); }
+
+        /* Screen 1: Welcome */
+        #screen1 .gift { font-size: 5rem; cursor: pointer; animation: bounce 2s infinite; }
+
+        /* Screen 2: Lock */
+        .lock-input {
+            width: 80%;
+            padding: 10px;
+            font-size: 1.2rem;
+            border: 2px solid #ff85a1;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        /* Screen 3: Balloon Game */
+        .balloon-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .balloon {
+            width: 60px;
+            height: 75px;
+            background: #ff7096;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            position: relative;
+            transition: transform 0.2s;
+        }
+        .balloon:hover { transform: scale(1.1); }
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            width: 2px;
+            height: 10px;
+            background: #ff7096;
+        }
+        .collage {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        .collage img { width: 100%; height: 100px; object-fit: cover; border-radius: 8px; border: 2px solid #ff85a1; }
+
+        /* Quiz Game */
+        .quiz-option {
+            background: #fff;
+            border: 2px solid #ff85a1;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .quiz-option:hover { background: #ffe5ec; }
+
+        /* Final Animations & Pictures */
+        .big-pic { width: 100%; max-height: 300px; object-fit: cover; border-radius: 15px; margin: 15px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .quote { font-style: italic; color: #ff0a54; font-weight: bold; font-size: 1.2rem; margin-top: 20px; }
+
+        /* Keyframes */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="screen1" class="screen active">
+        <h1>Happy Birthday, Princess! 🎉</h1>
+        <p>Tomar jonno ekta special surprise opekkha korchhe. Nicher gift box-e click kore bhetore jao! 👇</p>
+        <div class="gift" onclick="nextScreen(2)">🎁</div>
+    </div>
+
+    <div id="screen2" class="screen">
+        <h2>🔒 Security Lock</h2>
+        <p>Aamader bhalobashar password-ta ekhane dao (Hint: Tumi jeta jano):</p>
+        <input type="password" id="passwordField" class="lock-input" placeholder="Enter Password...">
+        <br>
+        <button class="btn" onclick="checkPassword()">Unlock Surprise</button>
+        <p id="lockError" style="color: red; display: none; margin-top: 10px;">Bhul Password! Abar chesta koro. 😢</p>
+    </div>
+
+    <div id="screen3" class="screen">
+        <h2>🎈 Balloon Popping Fun!</h2>
+        <p>Proti-ti balloon-e click kore shegulo fatao ar aamader bhalo kichhu muhurto ber koro (Total 8 ta):</p>
+        <div class="balloon-container" id="balloonContainer">
+            <div class="balloon" onclick="popBalloon(this, 1)">1</div>
+            <div class="balloon" onclick="popBalloon(this, 2)">2</div>
+            <div class="balloon" onclick="popBalloon(this, 3)">3</div>
+            <div class="balloon" onclick="popBalloon(this, 4)">4</div>
+            <div class="balloon" onclick="popBalloon(this, 5)">5</div>
+            <div class="balloon" onclick="popBalloon(this, 6)">6</div>
+            <div class="balloon" onclick="popBalloon(this, 7)">7</div>
+            <div class="balloon" onclick="popBalloon(this, 8)">8</div>
+        </div>
+
+        <div class="collage" id="photoCollage">
+            <img src="https://picsum.photos/200/300?random=1" alt="Pic 1">
+            <img src="https://picsum.photos/200/300?random=2" alt="Pic 2">
+            <img src="https://picsum.photos/200/300?random=3" alt="Pic 3">
+            <img src="https://picsum.photos/200/300?random=4" alt="Pic 4">
+            <img src="https://picsum.photos/200/300?random=5" alt="Pic 5">
+            <img src="https://picsum.photos/200/300?random=6" alt="Pic 6">
+            <img src="https://picsum.photos/200/300?random=7" alt="Pic 7">
+            <img src="https://picsum.photos/200/300?random=8" alt="Pic 8">
+        </div>
+
+        <div id="wishParagraph1" style="display: none; margin-top: 20px;">
+            <h2>✨ Tomar Jonno Prothom Wish</h2>
+            <p>Shubho Jonmodin amar bhalobasha! Tumi jokhon prothom amar jibone eshechile, thik jemon ai balloon gulo fute khushi ber holo, amar jibon-tao temni anonde bhore uthechilo. Tomar ai boro dine ami kamona kori tumi jeno prithibir shobcheye shukhi manush hou. Ami shorwoda tomar pashe thakbo, hansi ar kannay.</p>
+            <button class="btn" onclick="nextScreen(4)">Next Page 💖</button>
+        </div>
+    </div>
+
+    <div id="screen4" class="screen">
+        <h2>💞 Our 2 Years of Love Journey</h2>
+        <p>Dekhte dekhte aamader shundor somporker 2 bochor kete gelo! Ai 2ti bochhorer proti-ti muhurto amar kachhe smoroniya. Amader moddhe onek hansi, rag-obhiman ar obiswasya bhalobasha chhilo. Tumi amar jibone na thakle ami bujhtam-i na bhalobashar prokrito ortho ki. 2 bochorer ai poth chola jeno ekhono prothom diner motoi fresh lagchhe. Asha kori aamader ai badhon ajibon emon-i shokto thakbe.</p>
+        <img class="big-pic" src="https://picsum.photos/500/300?random=9" alt="Gf Pic 1">
+        <button class="btn" onclick="nextScreen(5)">Go to Next Surprise ✨</button>
+    </div>
+
+    <div id="screen5" class="screen">
+        <h2>🎂 Happy Birthday My Queen!</h2>
+        <p>Ai special dine ami tomake janate chai tumi amar kachhe koto ta mulloban. Tomar oi mishti hansi amar shob klanti dure kore dey. Ami ashwasti dichhi je agami bochor guloteo ami tomar jonmodin thik ebhabe-i special kore rakhar chesta korbo. Tomar shob shopno jeno shotti hoy, ar tomar chokhe jeno kokhono kono kashto na ase. Shurjo jemon prithibi ke alorito kore, tumi amar mon ke thik temni alorito korechho.</p>
+        <img class="big-pic" src="https://picsum.photos/500/300?random=10" alt="Gf Pic 2">
+        <button class="btn" onclick="nextScreen(6)">Let's Play a Game! 🎮</button>
+    </div>
+
+    <div id="screen6" class="screen">
+        <h2>🎮 Our Special Date Game</h2>
+        <p>Dekhi tomar koto ta mone achhe! Aamader special relationship date konti?</p>
+        <div class="quiz-option" onclick="checkQuiz(false)">A) 14 February 2025</div>
+        <div class="quiz-option" onclick="checkQuiz(true)">B) 08 January 2026</div>
+        <div class="quiz-option" onclick="checkQuiz(false)">C) 30 June 2010</div>
+        <p id="quizFeedback" style="margin-top: 15px; font-weight: bold;"></p>
+    </div>
+
+    <div id="screen7" class="screen">
+        <h2>🎉 Happy Birthday to You! ❤️</h2>
+        <p>Shesh barer moto janai, Shubho Jonmodin! Tumi amar hridoyer rani. Tomake peye ami shotti bhaggoban.</p>
+        <img class="big-pic" src="https://picsum.photos/500/300?random=11" alt="Final Romantic Pic">
+        <div class="quote">"In all the world, there is no heart for me like yours. In all the world, there is no love for you like mine."</div>
+        <p style="margin-top: 20px; font-weight: bold; color: #ff0a54;">Forever Yours. 💕</p>
+    </div>
+
+    <script>
+        let poppedCount = 0;
+        const bgMusic = document.getElementById('bgMusic');
+
+        // Function to navigate between screens
+        function nextScreen(screenNum) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen' + screenNum).classList.add('active');
+        }
+
+        // Password Checker
+        function checkPassword() {
+            const pass = document.getElementById('passwordField').value;
+            if(pass === "223367") {
+                bgMusic.play(); // Play song on successful unlock
+                nextScreen(3);
+            } else {
+                document.getElementById('lockError').style.display = 'block';
+            }
+        }
+
+        // Balloon Popping mechanism
+        function popBalloon(element, num) {
+            element.style.visibility = 'hidden'; // Balloon pop function
+            poppedCount++;
+            
+            // 8 ta balloon pop hole collage & wish ashbe
+            if(poppedCount === 8) {
+                document.getElementById('balloonContainer').style.display = 'none';
+                document.getElementById('photoCollage').style.display = 'grid';
+                document.getElementById('wishParagraph1').style.display = 'block';
+            }
+        }
+
+        // Quiz game response
+        function checkQuiz(isCorrect) {
+            const feedback = document.getElementById('quizFeedback');
+            if(isCorrect) {
+                feedback.innerHTML = "Wow! Ekdom sothik uttor! 😍 Moving to final surprise...";
+                feedback.style.color = "green";
+                setTimeout(() => {
+                    nextScreen(7);
+                }, 2000);
+            } else {
+                feedback.innerHTML = "Oops! Bhul uttor. Hint: Ota aamader anniversary date! 😉";
+                feedback.style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>
